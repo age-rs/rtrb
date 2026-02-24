@@ -131,15 +131,18 @@ There are many varieties of ring buffers available, here we limit the selection
 to wait-free SPSC implementations:
 
 * [ach-spsc](https://crates.io/crates/ach-spsc) (using const generics)
+* [fq](https://crates.io/crates/fq)
 * [gil](https://crates.io/crates/gil) (see `gil::spsc`)
 * [heapless](https://crates.io/crates/heapless) (for embedded systems, see `heapless::spsc`)
 * [jack](https://crates.io/crates/jack) (FFI bindings for JACK, see `jack::Ringbuffer`)
 * [magnetic](https://crates.io/crates/magnetic) (see `magnetic::spsc` module)
+* [nexus-queue](https://crates.io/crates/nexus-queue) (see `nexus_queue::spsc` module)
 * [npnc](https://crates.io/crates/npnc) (see `npnc::bounded::spsc` module)
 * [omango](https://crates.io/crates/omango) (see `omango::queue::spsc::bounded()`)
 * [ringbuf](https://crates.io/crates/ringbuf) (supports const generics and heap allocation)
 * [ringbuffer-spsc](https://crates.io/crates/ringbuffer-spsc) (using const generics)
 * [shmem-ipc](https://crates.io/crates/shmem-ipc) (see `shmem_ipc::sharedring` and `shmem_ipc::ringbuf` modules)
+* [smallring](https://crates.io/crates/smallring) (see `smallring::spsc` module)
 
 There are also implementations in other languages:
 
