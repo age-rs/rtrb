@@ -40,17 +40,19 @@
 //! ```
 //!
 //! See the documentation of the [`chunks#examples`] module
-//! for examples that write multiple items at once with ...
+//! for examples that write/read multiple items at once.
+//! See also:
 //!
 //!   * [`Producer::write_chunk()`]
 //!   * [`Producer::write_chunk_uninit()`]
 //!   * [`Producer::push_partial_slice()`] (if `T: Copy`)
-//!
-//! ... and read multiple items at once with ...
+//!   * [`Producer::push_entire_slice()`] (if `T: Copy`)
 //!
 //!   * [`Consumer::read_chunk()`]
 //!   * [`Consumer::pop_partial_slice()`] (if `T: Copy`)
 //!   * [`Consumer::pop_partial_slice_uninit()`] (if `T: Copy`)
+//!   * [`Consumer::pop_entire_slice()`] (if `T: Copy`)
+//!   * [`Consumer::pop_entire_slice_uninit()`] (if `T: Copy`)
 #![cfg_attr(not(feature = "std"), no_std)]
 #![warn(rust_2018_idioms)]
 #![deny(missing_docs, missing_debug_implementations)]

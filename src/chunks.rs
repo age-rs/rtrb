@@ -14,8 +14,10 @@
 //! Immutable access to the slots of the chunk can be obtained with [`ReadChunk::as_slices()`].
 //!
 //! If the item type `T` implements [`Copy`], the convenience functions
-//! [`Producer::push_partial_slice()`], [`Consumer::pop_partial_slice()`]
-//! and [`Consumer::pop_partial_slice_uninit()`] can be used.
+//! [`Producer::push_partial_slice()`], [`Producer::push_entire_slice()`],
+//! [`Consumer::pop_partial_slice()`], [`Consumer::pop_entire_slice()`],
+//! [`Consumer::pop_partial_slice_uninit()`]
+//! and [`Consumer::pop_entire_slice_uninit()`] can be used.
 //!
 //! # Examples
 //!
@@ -23,8 +25,7 @@
 //! `producer` and `consumer` would of course live on different threads:
 //!
 //! If the trait bound `T: Copy` is satisfied,
-//! [`Producer::push_partial_slice()`] and [`Consumer::pop_partial_slice()`]
-//! (and [`Consumer::pop_partial_slice_uninit()`]) can be used.
+//! the `push_*_slice()` and `pop_*_slice()` methods can be used.
 //!
 //! ```
 //! use rtrb::RingBuffer;
@@ -37,9 +38,7 @@
 //! assert_eq!(remainder, [5, 6]);
 //!
 //! let mut destination = vec![0; 3];
-//! let (popped, remainder) = consumer.pop_partial_slice(&mut destination);
-//! assert_eq!(popped, [1, 2, 3]);
-//! assert_eq!(remainder, []);
+//! consumer.pop_entire_slice(&mut destination).unwrap();
 //! assert_eq!(destination, [1, 2, 3]);
 //!
 //! let (popped, remainder) = consumer.pop_partial_slice(&mut destination);
@@ -79,16 +78,25 @@
 //! assert_eq!(consumer.peek(), Ok(&12));
 //!
 //! let data = vec![20, 21, 22, 23];
-//! producer.push_entire_slice(&data).unwrap();
+//! // NB: write_chunk_uninit() could be used for possibly better performance:
+//! if let Ok(mut chunk) = producer.write_chunk(4) {
+//!     let (one, two) = chunk.as_mut_slices();
+//!     let mid = one.len();
+//!     one.copy_from_slice(&data[..mid]);
+//!     two.copy_from_slice(&data[mid..]);
+//!     chunk.commit_all();
+//! } else {
+//!     unreachable!();
+//! }
 //!
 //! assert!(producer.is_full());
 //! assert_eq!(consumer.slots(), 5);
 //!
 //! let mut v = Vec::<i32>::with_capacity(5);
 //! if let Ok(chunk) = consumer.read_chunk(5) {
-//!     let (first, second) = chunk.as_slices();
-//!     v.extend(first);
-//!     v.extend(second);
+//!     let (one, two) = chunk.as_slices();
+//!     v.extend(one);
+//!     v.extend(two);
 //!     chunk.commit_all();
 //! } else {
 //!     unreachable!();
